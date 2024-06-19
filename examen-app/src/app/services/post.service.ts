@@ -1,24 +1,28 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Firestore, DocumentSnapshot} from '@angular/fire/firestore'; // Import AngularFirestore instead of Firestore
 import { Observable } from 'rxjs';
-import { map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IPost } from '../interfaces/IPost';
-import { Action} from 'rxjs/internal/scheduler/Action';
+import { Action } from 'rxjs/internal/scheduler/Action';
+import { DocumentData } from '@angular/fire/firestore'; // Import DocumentData
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
   private posts: IPost[] = [];
+  AngularFirestore: any;
+  data:any;
+  id:any;
+  
 
-
-  constructor(private firestore: Firestore) { } // Use AngularFirestore instead of Firestore
+  constructor(@Inject(Firestore) private firestore: any) { } // Use 'any' type for the 'firestore' property
 
   getPosts(): Observable<IPost[]> {
-    return this.firestore.collection<IPost>('Posts', (ref: { orderBy: (arg0: string, arg1: string) => any; }) => ref.orderBy('id', 'desc')).snapshotChanges().pipe(
-      map((actions: Action<DocumentSnapshot<IPost>>[]) => actions.map(a => {
-        const data = a.doc.data() as IPost;
-        const id = a.doc.id;
+    return this.firestore.collection('Posts').snapshotChanges().pipe(
+      map((actions: Action<DocumentSnapshot<IPost, DocumentData>>[]) => actions.map((a: Action<DocumentSnapshot<IPost, DocumentData>>) => {
+        const data = (a as any).payload.doc.data() as IPost;
+        const id = (a as any).payload.doc.id;
         return { data };
       }))
     );

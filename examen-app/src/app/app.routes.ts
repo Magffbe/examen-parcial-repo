@@ -1,19 +1,23 @@
 import { Routes } from '@angular/router';
+import { PostFirestorePage } from '../app/post-firestore/post-firestore.page';
+import { PostApiPage } from './post-api/post-api.page';
+import { HomePage } from './home/home.page';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'post-firestore', pathMatch: 'full' },
+
+  { 
+    path: '', 
+    redirectTo: 'PostfirestorePage', 
+    pathMatch: 'full' 
+  },
   {
     path: 'home',
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
-  },
+
   {
     path: 'post-firestore',
-    loadComponent: () => import('./post-firestore/post-firestore.page').then( m => m.PostFirestorePage)
+    loadComponent: () => import('../app/post-firestore/post-firestore.page').then( m => m.PostFirestorePage)
   },
   {
     path: 'post-api',
